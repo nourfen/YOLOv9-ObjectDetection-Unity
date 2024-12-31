@@ -20,6 +20,7 @@ public class Yolo
 
     public List<YoloPrediction> Predict(Tensor<float> outputTensor, int imageWidth, int imageHeight)
     {
+        Debug.Log($"Image Width: {imageWidth}, Image Height: {imageHeight}");
         ComputeTensorData computeTensorData = ComputeTensorData.Pin(outputTensor);
         if (computeTensorData == null)
         {

@@ -10,97 +10,107 @@ public class Detector : MonoBehaviour
     public FileLoader fileLoader;
 
     // Object Detection
-    private ModelAsset modelAsset;
-    private Drawable screen;
-    private Model runtimeModel;
-    private Worker worker;
-    private Yolo yolo;
-    private Source source = null;
+    private ModelAsset _modelAsset;
+    private Drawable _screen;
+    private Model _runtimeModel;
+    private Worker _worker;
+    private Yolo _yolo;
+    private Source _source;
+    
+    //
+    private bool _resolutionWasSet = false;
 
     void Start()
     {
         // Initialise Classes
-        yolo = new Yolo();
-        modelAsset = Resources.Load<ModelAsset>("Models/yolov9-c");
-        runtimeModel = ModelLoader.Load(modelAsset);
-        worker = new Worker(runtimeModel, BackendType.GPUCompute);
+        _yolo = new Yolo();
+        _modelAsset = Resources.Load<ModelAsset>("Models/yolov9-c");
+        _runtimeModel = ModelLoader.Load(_modelAsset);
+        _worker = new Worker(_runtimeModel, BackendType.GPUCompute);
 
         fileLoader.OnSourceDetected += OnSourceChanged;
     }
 
     void Update()
     {
-        if (source == null || source.IsProcessedOnce())
+        if (_source == null || _source.IsProcessedOnce())
             return;
 
-        if (source.IsFrameReady())
+        if (_source.IsFrameReady())
         {
+            SetResolutionOnce();
             DetectFrame();
         }
     }
 
     private void OnDisable()
     {
-        worker.Dispose();
+        _worker.Dispose();
     }
 
     public void StartDetection(float cTh, float iouTh)
     {
-        yolo.IouThreshold = iouTh;
-        yolo.ConfidenceThreshold = cTh;
-
-        screen = new Drawable();
+        _yolo.IouThreshold = iouTh;
+        _yolo.ConfidenceThreshold = cTh;
+        _screen = new Drawable();
         
-
-        if (source.IsProcessedOnce())
+        if (_source.IsProcessedOnce())
         {
+            SetResolutionOnce();
             DetectFrame();
         } else
         {
-            source.Play();
+            _source.Play();
         }
     }
     void OnSourceChanged(SourceType sourceType, string path)
     {
         if (sourceType == SourceType.ImageSource) {
-            source = new ImageSource(path);
+            _source = new ImageSource(path);
         }
         else if (sourceType == SourceType.VideoSource)
         {
-            source = new VideoSource(path);
+            _source = new VideoSource(path);
         } else
         {
-            source = new CameraSource();
+            _source = new CameraSource();
         }
+    }
+
+    private void SetResolutionOnce()
+    {
+        if (_resolutionWasSet) return;
+        var texture = _source.GetTexture();
+        _screen.SetDisplayResolution(texture.width, texture.height);
+        _resolutionWasSet = true;
     }
     private void DetectFrame()
     {
         // Get the newly generated texture
-        Texture texture = source.GetTexture();
+        Texture texture = _source.GetTexture();
 
         // Remove the old bounding boxes
-        screen.ResetBoundingBoxes();
+        _screen.ResetBoundingBoxes();
 
         // Display the texture
-        screen.SetTexture(texture);
+        _screen.SetTexture(texture);
 
         // Prepare the input tensor
         Tensor<float> inputTensor = TextureConverter.ToTensor(texture, TARGET_WIDTH, TARGET_HEIGHT, 3);
 
         // Run the model on the input
-        worker.Schedule(inputTensor);
+        _worker.Schedule(inputTensor);
 
         // Get output tensor
-        Tensor<float> outputTensor = worker.PeekOutput() as Tensor<float>;
-
+        Tensor<float> outputTensor = _worker.PeekOutput() as Tensor<float>;
         // Process Model Output
-        List<YoloPrediction> predictions = yolo.Predict(outputTensor, TARGET_WIDTH, TARGET_HEIGHT);
+        List<YoloPrediction> predictions = _yolo.Predict(outputTensor, texture.width, texture.height);
 
         // Draw the new bounding boxes 
-        screen.DrawBoundingBoxes(predictions);
+        _screen.DrawBoundingBoxes(predictions);
 
         // Dispose tensors
-        outputTensor.Dispose();
+        outputTensor?.Dispose();
         inputTensor.Dispose();
     }
 }

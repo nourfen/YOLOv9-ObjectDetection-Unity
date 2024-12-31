@@ -5,42 +5,51 @@ using UnityEngine.UI;
 public class Drawable
 {
     // Object Pooling
-    private ObjectPool<BoundingBox> boundingBoxPool;
-    private RawImage screen;
-    private RectTransform screenRectTransform;
-    private List<BoundingBox> activeBoundingBoxes;
-    private GameObject boundingBoxPrefab;
-    private float screenWidth;
-    private float screenHeight;
+    private ObjectPool<BoundingBox> _boundingBoxPool;
+    private List<BoundingBox> _activeBoundingBoxes;
+    private GameObject _boundingBoxPrefab;
+    // Display
+    private readonly RawImage _screen;
+    private RectTransform _screenRectTransform;
+    
+    private float _screenWidth;
+    private float _screenHeight;
 
     public Drawable()
     {
-        screen = GameObject.Find("Display").GetComponent<RawImage>();
+        var display = GameObject.Find("Display");
+        _screenRectTransform = display.GetComponent<RectTransform>();
+        _screen = display.GetComponent<RawImage>();
+    }
+
+    public void SetDisplayResolution(int displayWidth, int displayHeight)
+    {
+        _screenRectTransform.sizeDelta = new Vector2(displayWidth, displayHeight);
         PrepareBoundingBoxPool();
     }
 
     public void SetTexture(Texture texture)
     {
-        if (texture == null)
+        if (!texture)
         {
             Debug.LogError("The given texture is null");
             return;
         }
 
-        screen.texture = texture;
+        _screen.texture = texture;
     }
     
     public void DrawBoundingBoxes(List<YoloPrediction> yoloPredictions)
     {
         // Calculate the offset for center-middle anchoring
-        float offsetX = screenWidth / 2;
-        float offsetY = screenHeight / 2;
+        float offsetX = _screenWidth / 2;
+        float offsetY = _screenHeight / 2;
 
         foreach (YoloPrediction prediction in yoloPredictions)
         {
             // Get a bounding box from the pool
-            BoundingBox boundingBox = boundingBoxPool.Get();
-            activeBoundingBoxes.Add(boundingBox);
+            BoundingBox boundingBox = _boundingBoxPool.Get();
+            _activeBoundingBoxes.Add(boundingBox);
 
             // Get the RectTransform of the bounding box
             RectTransform boxRectTransform = boundingBox.GetComponent<RectTransform>();
@@ -65,28 +74,27 @@ public class Drawable
 
     public void ResetBoundingBoxes()
     {
-        foreach (BoundingBox box in activeBoundingBoxes)
+        foreach (BoundingBox box in _activeBoundingBoxes)
         {
-            boundingBoxPool.ReturnToPool(box);
+            _boundingBoxPool.ReturnToPool(box);
         }
-        activeBoundingBoxes.Clear();
+        _activeBoundingBoxes.Clear();
     }
 
     private void PrepareBoundingBoxPool()
     {
-        activeBoundingBoxes = new List<BoundingBox>();
-        screenRectTransform = screen.GetComponent<RectTransform>();
-        // TODO: Try folder path 
-        boundingBoxPrefab = Resources.Load<GameObject>("Prefabs/BBox");
+        _activeBoundingBoxes = new List<BoundingBox>();
+        _screenRectTransform = _screen.GetComponent<RectTransform>();
+        _boundingBoxPrefab = Resources.Load<GameObject>("Prefabs/BBox");
 
-        if (boundingBoxPrefab != null)
+        if (_boundingBoxPrefab != null)
         {
-            screenWidth = screenRectTransform.rect.width;
-            screenHeight = screenRectTransform.rect.height;
-            boundingBoxPool = new ObjectPool<BoundingBox>(
-                boundingBoxPrefab.GetComponent<BoundingBox>(),
+            _screenWidth = _screenRectTransform.rect.width;
+            _screenHeight = _screenRectTransform.rect.height;
+            _boundingBoxPool = new ObjectPool<BoundingBox>(
+                _boundingBoxPrefab.GetComponent<BoundingBox>(),
                 initialSize: 10,
-                parent: screenRectTransform
+                parent: _screenRectTransform
             );
         }
     }

@@ -65,22 +65,40 @@ void CSMain(uint3 id : SV_DispatchThreadID)
     float xMax = centerX + (boxWidth / 2.0f);
     float yMax = centerY + (boxHeight / 2.0f);
     
-    // Apply scaling factors to adjust from 640x640 to actual image size
-    //xMin *= scaleX;
-    //xMax *= scaleX;
-    //yMin *= scaleY;
-    //yMax *= scaleY;
+    // ----------------------------------------------------------------------------
+    // 1) Compute scale factors to go from 640×640 to original image size
+    //    (assuming the YOLO model is always receiving a 640x640 input)
+    // ----------------------------------------------------------------------------
+    float scaleX = (float)imageWidth  / 640.0f;
+    float scaleY = (float)imageHeight / 640.0f;
 
-    // Adjust for image height (flip Y-axis)
-    float flippedYMin = imageHeight - yMax;
-    float flippedYMax = imageHeight - yMin;
+    // Apply scaling
+    xMin *= scaleX;
+    xMax *= scaleX;
+    yMin *= scaleY;
+    yMax *= scaleY;
+
+    // ----------------------------------------------------------------------------
+    // 2) If your coordinate system in Unity expects the origin at top-left (y=0),
+    //    you might need to flip the Y-coordinates because many neural nets
+    //    assume y=0 at bottom.
+    // ----------------------------------------------------------------------------
+    // Flip Y: top-left origin => y=0 at the top
+    float flippedYMin = (float)imageHeight - yMax;
+    float flippedYMax = (float)imageHeight - yMin;
+
+    // 3) Convert (xMin, yMin, xMax, yMax) into (x, y, width, height)
+    float finalX      = xMin;
+    float finalY      = flippedYMin;            // or just yMin if not flipping
+    float finalWidth  = (xMax - xMin);
+    float finalHeight = (flippedYMax - flippedYMin);
 
     // Atomically increment the detection counter and get the valid index
     uint validIndex;
     validDetectionCounter.InterlockedAdd(0, 1, validIndex); // Atomically add 4 to the counter
 
     // Write the valid detection data to the output buffer at the valid index
-    outputBoxes[validIndex] = float4(xMin, flippedYMin, boxWidth, flippedYMax - flippedYMin); // Store bounding box coordinates
+    outputBoxes[validIndex]   = float4(finalX, finalY, finalWidth, finalHeight); // Store bounding box coordinates
     outputClasses[validIndex] = classIndex; // Store the predicted class index
     outputScores[validIndex] = maxClassScore; // Store the confidence score
 }
