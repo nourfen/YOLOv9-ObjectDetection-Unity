@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
@@ -10,6 +11,7 @@ using UnityEngine.Video;
 public class FileLoader : MonoBehaviour
 {
     public Action<SourceType, string> OnSourceDetected;
+    public TMP_Text fileStatus;
 
     private List<SourceType> sourceTypes = new List<SourceType> { SourceType.ImageSource, SourceType.CameraSource, SourceType.VideoSource };
     private string path = "";
@@ -38,26 +40,36 @@ public class FileLoader : MonoBehaviour
         // Check if a file was selected
         if (FileBrowser.Success)
         {
+            fileStatus.color = new Color32(106, 176, 76, 255);
             string path = FileBrowser.Result[0];
             Debug.Log("Selected: " + path);
 
             // Get the file extension
             string extension = Path.GetExtension(path).ToLower();
-
+            string fileName = Path.GetFileName(path);
             // Check if the file is an image
             if (extension == ".jpg" || extension == ".png" || extension == ".jpeg")
             {
                 LoadImage(path);
+                fileStatus.text = $"Successfully loaded image: {fileName}";
             }
             // Check if the file is a video
             else if (extension == ".mp4" || extension == ".avi" || extension == ".mov")
             {
                 LoadVideo(path);
+                fileStatus.text = $"Successfully loaded video: {fileName}";
             }
             else
             {
                 Debug.LogWarning("Unsupported file type");
+                fileStatus.text = "Error: Unsupported file type.";
+                fileStatus.color = new Color32(235, 77, 75, 255);
             }
+        }
+        else
+        {
+            fileStatus.text = "Error while loading file.";
+            fileStatus.color = new Color32(235, 77, 75, 255);
         }
     }
 

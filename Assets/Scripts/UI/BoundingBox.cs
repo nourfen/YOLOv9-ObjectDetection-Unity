@@ -18,6 +18,7 @@ public class BoundingBox : MonoBehaviour
         if (boxImage != null)
         {
             boxImage.color = color;
+            label.color = Color.red;
         }
     }
 
