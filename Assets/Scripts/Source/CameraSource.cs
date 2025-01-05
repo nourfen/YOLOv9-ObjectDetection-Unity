@@ -28,4 +28,10 @@ public class CameraSource : Source
     {
         webcamTexture.Play();
     }
+
+    public override void Dispose()
+    {
+        webcamTexture.Stop();
+        webcamTexture = null;
+    }
 }

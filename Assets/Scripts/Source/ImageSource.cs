@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class ImageSource : Source
 {
-    private Texture2D texture = new Texture2D(2, 2);
-    private bool isLoaded = false;
+    private Texture2D _texture = new(2, 2);
+    private bool _isLoaded = false;
     public ImageSource(string path)
     {
         LoadTextureFromFile(path);
@@ -12,19 +12,12 @@ public class ImageSource : Source
 
     public override Texture GetTexture()
     {
-        if (isLoaded)
-        {
-            return texture;
-        }
-        else
-        {
-            return null;
-        }
+        return _isLoaded ? _texture : null;
     }
 
     public override bool IsFrameReady()
     {
-        return isLoaded;
+        return _isLoaded;
     }
 
     public override bool IsProcessedOnce()
@@ -37,15 +30,21 @@ public class ImageSource : Source
         throw new System.NotImplementedException();
     }
 
+    public override void Dispose()
+    {
+        _isLoaded = false;
+        _texture = null;
+    }
+
     void LoadTextureFromFile(string path)
     {
         if (File.Exists(path))
         {
             byte[] imageData = File.ReadAllBytes(path);
 
-            isLoaded = texture.LoadImage(imageData);
+            _isLoaded = _texture.LoadImage(imageData);
             // Load the image data into the texture
-            if (!isLoaded)
+            if (!_isLoaded)
             {
                 Debug.LogError("Failed to load image data into texture.");
             }  

@@ -9,7 +9,7 @@ public class Drawable
     private List<BoundingBox> _activeBoundingBoxes;
     private GameObject _boundingBoxPrefab;
     // Display
-    private readonly RawImage _screen;
+    private RawImage _screen;
     private RectTransform _screenRectTransform;
     
     private float _screenWidth;
@@ -17,7 +17,8 @@ public class Drawable
 
     public Drawable()
     {
-        var display = GameObject.Find("Display");
+        var displayContainer = GameObject.Find("DisplayContainer");
+        var display = displayContainer.transform.GetChild(0).gameObject;
         _screenRectTransform = display.GetComponent<RectTransform>();
         _screen = display.GetComponent<RawImage>();
     }
@@ -97,5 +98,16 @@ public class Drawable
                 parent: _screenRectTransform
             );
         }
+    }
+
+    public void Dispose()
+    {
+        ResetBoundingBoxes();
+        _boundingBoxPool = null;
+        _activeBoundingBoxes = null;
+        _screen = null;
+        _screenRectTransform = null;
+        _screenWidth = 0;
+        _screenHeight = 0;
     }
 }

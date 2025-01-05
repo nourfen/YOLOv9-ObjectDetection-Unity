@@ -97,7 +97,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Rounded20px@2x_0
+      name: Rounded20px@2x_1
       rect:
         serializedVersion: 2
         x: 0
@@ -106,7 +106,7 @@ TextureImporter:
         height: 80
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 30, y: 30, z: 30, w: 30}
+      border: {x: 38, y: 38, z: 38, w: 38}
       customData: 
       outline: []
       physicsShape: []
@@ -132,7 +132,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Rounded20px@2x_0: -676083645
+      Rounded20px@2x_1: -676083645
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

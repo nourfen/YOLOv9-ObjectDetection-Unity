@@ -1,5 +1,3 @@
-using System;
-using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -7,12 +5,6 @@ using UnityEngine.UI;
 public class ButtonManager : MonoBehaviour
 {
     private GameObject _currentSelectedButton;
-    
-    //Colors:
-    private readonly Color _selectedColor = new Color32(19, 15, 64, 255);
-    private readonly Color _unselectedColor = new Color32(255, 255, 255, 255);
-    private readonly Color _hoverColor = new Color32(186, 220, 88, 255);  //6AB04C
-    
     public GameObject[] buttonContainer;
 
     void Start()
@@ -68,33 +60,21 @@ public class ButtonManager : MonoBehaviour
     private void OnSelected(GameObject selectedButton)
     {
         if (selectedButton == _currentSelectedButton) return;
-        var outline = selectedButton.GetComponent<Outline>();
-        outline.enabled = false;
         UnhighlightOldButton(_currentSelectedButton);
         _currentSelectedButton = selectedButton;
-        HighlightNewButton(selectedButton);
+        HighlightNewButton(_currentSelectedButton);
     }
 
     private void HighlightNewButton(GameObject selectedButton)
     {
-        var buttonBgImage = selectedButton.GetComponent<Image>();
-        var text = selectedButton.GetComponentInChildren<TMP_Text>(); 
-        var icon = selectedButton.GetComponentInChildren<RawImage>();
-        
-        text.color = _selectedColor;
-        icon.color = _selectedColor;
-        buttonBgImage.color = _hoverColor;
+        var outline = selectedButton.GetComponent<Outline>();
+        outline.enabled = true;
     }
 
     private void UnhighlightOldButton(GameObject selectedButton)
     {
-        var buttonBgImage = selectedButton.GetComponent<Image>();
-        var text = selectedButton.GetComponentInChildren<TMP_Text>(); 
-        var icon = selectedButton.GetComponentInChildren<RawImage>();
-        
-        text.color = _unselectedColor;
-        icon.color = _unselectedColor;
-        buttonBgImage.color = _selectedColor;
+        var outline = selectedButton.GetComponent<Outline>();
+        outline.enabled = false;
     }
 }
 

@@ -10,6 +10,8 @@ public abstract class Source
     public abstract bool IsProcessedOnce();
 
     public abstract void Play();
+
+    public abstract void Dispose();
 }
 
 public enum SourceType

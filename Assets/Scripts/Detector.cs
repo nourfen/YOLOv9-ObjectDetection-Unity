@@ -48,6 +48,14 @@ public class Detector : MonoBehaviour
         _worker.Dispose();
     }
 
+    public void Dispose()
+    {
+        _source.Dispose();
+        _screen.Dispose();
+        _screen = null;
+        _resolutionWasSet = false;
+    }
+
     public void StartDetection(float cTh, float iouTh)
     {
         _yolo.IouThreshold = iouTh;

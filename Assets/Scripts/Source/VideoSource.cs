@@ -39,4 +39,11 @@ public class VideoSource : Source
     {
         _videoPlayer.Play();
     }
+
+    public override void Dispose()
+    {
+        _videoPlayer.Stop();
+        _videoPlayer.url = "";
+        _lastProcessedFrame = -1;
+    }
 }
