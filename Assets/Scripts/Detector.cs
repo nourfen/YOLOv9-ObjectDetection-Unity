@@ -7,7 +7,7 @@ public class Detector : MonoBehaviour
     private const int TARGET_WIDTH = 640;
     private const int TARGET_HEIGHT = 640;
 
-    public FileLoader fileLoader;
+    public FileLoader fileLoader; 
 
     // Object Detection
     private ModelAsset _modelAsset;
