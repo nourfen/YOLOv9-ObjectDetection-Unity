@@ -68,7 +68,9 @@ public class Drawable
             boxRectTransform.sizeDelta = new Vector2(width, height);
 
             // Update the bounding box appearance
-            boundingBox.SetColor(prediction.ClassColor);
+            // boundingBox.SetSize(width, height);
+            var classColor = prediction.ClassColor;
+            boundingBox.SetColor(classColor, classColor); 
             boundingBox.SetLabel($"{prediction.ClassName} ({prediction.Score:F2})");
         }
     }

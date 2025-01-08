@@ -20,12 +20,31 @@ public class UIHandler : MonoBehaviour
     [SerializeField] private GameObject display;
     [SerializeField] private GameObject fileSelectorPrefab;
 
-    private string _format = "0.00";
+    private readonly string _format = "0.00";
 
-    private List<SourceType> sourceTypes = new List<SourceType> { SourceType.ImageSource, SourceType.CameraSource, SourceType.VideoSource };
+    private readonly List<SourceType> _sourceTypes = new List<SourceType> { SourceType.ImageSource, SourceType.CameraSource, SourceType.VideoSource };
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    #region Unity Events
     void Start()
+    {
+        RegisterButtonsEvents();
+
+        RegisterSourceSelectorEvents();
+
+        RegisterThresholdControlsEvents();
+    }
+    
+    #endregion
+    
+    #region Private Methods
+    private void OnReset()
+    {
+        fileLoader.Dispose();
+        detector.Dispose();
+    }
+
+    #region Event Handlers
+    private void RegisterButtonsEvents()
     {
         // Ensure the button is assigned
         if (startDetectionButton != null)
@@ -40,29 +59,24 @@ public class UIHandler : MonoBehaviour
             // Add a listener to the button
             resetButton.onClick.AddListener(OnReset);
         }
-
+        
         // Ensure the button is assigned
         if (openFileSelectionButton != null)
         {
             // Add a listener to the button
-            openFileSelectionButton.onClick.AddListener(OnOpenFileSelectonButton);
+            openFileSelectionButton.onClick.AddListener(OnOpenFileSelectionButtonClick);
         }
+    }
 
+    private void RegisterSourceSelectorEvents()
+    {
         if (sourceTypeSelector != null)
         {
             sourceTypeSelector.onValueChanged.AddListener(OnSourceTypeChanged);
         }
-
-        RegisterInputEvents();
     }
 
-    private void OnReset()
-    {
-        fileLoader.Dispose();
-        detector.Dispose();
-    } 
-
-    private void RegisterInputEvents()
+    private void RegisterThresholdControlsEvents()
     {
         if (confidenceThresholdSlider != null)
         {
@@ -84,13 +98,14 @@ public class UIHandler : MonoBehaviour
             iouThreshold.onValueChanged.AddListener(OnIOUValueChanged);
         }
     }
+    #endregion
 
+    #region Event Functions
     private void OnConfidenceValueChanged(string value)
     {
         value = String.Format(value, _format);
         float valueFloat = float.Parse(value);
         confidenceThresholdSlider.value = valueFloat;
-        Debug.Log("Confidence value changed to: " + value);
     }
     
     private void OnIOUValueChanged(string value)
@@ -98,7 +113,6 @@ public class UIHandler : MonoBehaviour
         value = String.Format(value, _format);
         float valueFloat = float.Parse(value);
         iouThresholdSlider.value = valueFloat;
-        Debug.Log("IoU value changed to: " + value);
     }
     
     private void OnConfidenceSliderValueChanged(float value)
@@ -106,7 +120,6 @@ public class UIHandler : MonoBehaviour
         string valueString = value.ToString(_format);
         confidenceThresholdSlider.value = float.Parse(valueString);
         confidenceThreshold.text = valueString;
-        Debug.Log("Confidence value changed to: " + valueString);
     }
     
     private void OnIOUSliderValueChanged(float value)
@@ -114,7 +127,6 @@ public class UIHandler : MonoBehaviour
         string valueString = value.ToString(_format);
         iouThresholdSlider.value = float.Parse(valueString);
         iouThreshold.text = valueString;
-        Debug.Log("Confidence value changed to: " + valueString);
     }
 
     private void OnStartDetectionButtonClick()
@@ -127,21 +139,30 @@ public class UIHandler : MonoBehaviour
     private void OnSourceTypeChanged(int value)
     {
         fileLoader.fileStatus.text = "";
-        var sourceType = sourceTypes[value];
+        var sourceType = _sourceTypes[value];
         if ((sourceType == SourceType.CameraSource) && (openFileSelectionButton.gameObject.activeSelf))
         {
             openFileSelectionButton.gameObject.SetActive(false);
-        } else if ( ((sourceType == SourceType.VideoSource) || (sourceType == SourceType.ImageSource)) && (!openFileSelectionButton.gameObject.activeSelf) )
+        } else if (sourceType is SourceType.VideoSource or SourceType.ImageSource && !openFileSelectionButton.gameObject.activeSelf)
         {
             openFileSelectionButton.gameObject.SetActive(true);
         }
         fileLoader.SetDefaultFilter(sourceType);
     }
 
-    private void OnOpenFileSelectonButton()
+    private void OnOpenFileSelectionButtonClick()
     {
         fileSelectorPrefab.SetActive(true);
         fileLoader.OpenFileBrowser();
     }
+    #endregion
+    
+    #endregion
+    
+    
+    
+    
+
+   
 
 }

@@ -1,32 +1,38 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Rendering.Universal;
 
 public class BoundingBox : MonoBehaviour
 {
-    private Image boxImage;
-    private TMP_Text label;
+    private Image _boxImage;
+    private TMP_Text _label;
+    private Image _textBg;
+    private RectTransform _textRectTransform;
 
     void Awake()
     {
-        boxImage = GetComponent<Image>();
-        label = GetComponentInChildren<TMP_Text>();
+        _boxImage = GetComponent<Image>();
+        _label = GetComponentInChildren<TMP_Text>();
+        _textBg = transform.GetChild(0).GetComponent<Image>();
+        _textRectTransform = transform.GetChild(0).GetComponent<RectTransform>();
     }
 
-    public void SetColor(Color color)
+    public void SetColor(Color color1, Color color2)
     {
-        if (boxImage != null)
+        if (_boxImage != null)
         {
-            boxImage.color = color;
-            label.color = Color.red;
+            _boxImage.color = color1;
+            color2.a = 1;
+            _textBg.color = color2;
         }
     }
 
     public void SetLabel(string text)
     {
-        if (label != null)
+        if (_label != null)
         {
-            label.text = text;
+            _label.text = text;
         }
     }
 }

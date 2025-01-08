@@ -83,6 +83,8 @@ public class Detector : MonoBehaviour
         {
             _source = new CameraSource();
         }
+        
+        Debug.Log($"Source: {sourceType}");
     }
 
     private void SetResolutionOnce()

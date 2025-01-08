@@ -6,7 +6,7 @@ public class ContentsPanelManager : MonoBehaviour
     public GameObject[] panels;
     public TMP_Text mainTitle;
     private int _currentSelectedPanelIndex = 0;
-    private string[] _panelNames = new [] {"Dashboard", "Yolo Models", "About", "Settings"};
+    private string[] _panelNames = new [] {"YOLO Models Dashboard", "About"};
 
     void Start()
     {

@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: CustomDarkSkin
   m_EditorClassIdentifier: 
   m_font: {fileID: 12800000, guid: 03feb7614b8190e46832b16275339102, type: 3}
-  m_fontSize: 18
+  m_fontSize: 20
   m_rowHeight: 40
-  m_rowSpacing: 8
+  m_rowSpacing: 10
   m_windowColor: {r: 0.07450981, g: 0.09019608, b: 0.11372549, a: 1}
   m_filesListColor: {r: 0.101960786, g: 0.11764706, b: 0.14901961, a: 1}
   m_filesVerticalSeparatorColor: {r: 0.07450981, g: 0.09019608, b: 0.11372549, a: 1}
-  m_titleBackgroundColor: {r: 0.101960786, g: 0.11764706, b: 0.14901961, a: 1}
+  m_titleBackgroundColor: {r: 0.07450981, g: 0.09019608, b: 0.11372549, a: 1}
   m_titleTextColor: {r: 0.9137255, g: 0.91764706, b: 0.9372549, a: 1}
   m_windowResizeGizmoColor: {r: 0.9137255, g: 0.91764706, b: 0.9372549, a: 0.45882353}
   m_headerButtonsColor: {r: 0.9137255, g: 0.91764706, b: 0.9372549, a: 1}
