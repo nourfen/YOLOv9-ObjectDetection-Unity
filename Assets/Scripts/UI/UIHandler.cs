@@ -9,6 +9,7 @@ public class UIHandler : MonoBehaviour
     [SerializeField] private Button startDetectionButton;
     [SerializeField] private Button openFileSelectionButton;
     [SerializeField] private Button resetButton;
+    [SerializeField] private Button exitApplicationButton;
     [SerializeField] private TMP_InputField confidenceThreshold;
     [SerializeField] private Slider confidenceThresholdSlider;
     [SerializeField] private TMP_InputField iouThreshold;
@@ -46,25 +47,24 @@ public class UIHandler : MonoBehaviour
     #region Event Handlers
     private void RegisterButtonsEvents()
     {
-        // Ensure the button is assigned
         if (startDetectionButton != null)
         {
-            // Add a listener to the button
             startDetectionButton.onClick.AddListener(OnStartDetectionButtonClick);
         }
         
-        // Ensure the button is assigned
         if (resetButton != null)
         {
-            // Add a listener to the button
             resetButton.onClick.AddListener(OnReset);
         }
         
-        // Ensure the button is assigned
         if (openFileSelectionButton != null)
         {
-            // Add a listener to the button
             openFileSelectionButton.onClick.AddListener(OnOpenFileSelectionButtonClick);
+        }
+        
+        if (exitApplicationButton != null)
+        {
+            exitApplicationButton.onClick.AddListener(OnExitApplicationButtonClick);
         }
     }
 
@@ -134,6 +134,11 @@ public class UIHandler : MonoBehaviour
         float cTh = float.Parse(confidenceThreshold.text);
         float iouTh = float.Parse(iouThreshold.text);
         detector.StartDetection(cTh, iouTh);
+    }
+    
+    private void OnExitApplicationButtonClick()
+    {
+        Application.Quit();
     }
 
     private void OnSourceTypeChanged(int value)

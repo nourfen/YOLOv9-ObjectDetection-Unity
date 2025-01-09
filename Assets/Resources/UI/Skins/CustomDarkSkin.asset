@@ -63,7 +63,8 @@ MonoBehaviour:
   m_fileHeight: 30
   m_fileIconsPadding: 6
   m_fileNormalBackgroundColor: {r: 1, g: 1, b: 1, a: 0}
-  m_fileAlternatingBackgroundColor: {r: 1, g: 1, b: 1, a: 0.043137256}
+  m_fileAlternatingBackgroundColor: {r: 0.101960786, g: 0.11764706, b: 0.14901961,
+    a: 1}
   m_fileHoveredBackgroundColor: {r: 0.101960786, g: 0.11764706, b: 0.14901961, a: 1}
   m_fileSelectedBackgroundColor: {r: 0.14100811, g: 0.12335349, b: 0.33962262, a: 1}
   m_fileNormalTextColor: {r: 0.9137255, g: 0.91764706, b: 0.9372549, a: 0.87058824}
