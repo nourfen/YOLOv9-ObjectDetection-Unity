@@ -5164,16 +5164,17 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: "This project implements the YOLO (You Only Look Once) detection model
-    in Unity 6. It uses the YOLO IX model\u2014with plans to incorporate newer versions\u2014and
-    leverages the Unity Sentis package for ONNX model manipulation. Through GPU acceleration
-    via ComputeShaders, the application enables real-time object detection from images,
-    videos, or camera feeds with a configurable confidence and IoU (Intersection
-    over Unon) thresholds. The recognized objects are limited to those included in
-    the COCO dataset.\n\nMy motivation for creating this application stems from a
-    previous job where we considered integrating real-time object detection from
-    a HoloLens 2 camera stream. Unfortunately, short deadlines prevented that feature
-    from becoming a reality. However, my fascination with the concept led me to develop
-    this project on my own."
+    made by Ultralytics in Unity 6. It uses the YOLO IX model\u2014with plans to
+    incorporate newer versions\u2014and leverages the Unity Sentis package for ONNX
+    model manipulation. Through GPU acceleration via ComputeShaders, the application
+    enables real-time object detection from images, videos, or camera feeds with
+    a configurable confidence and IoU (Intersection over Unon) thresholds. The recognized
+    objects are limited to those included in the COCO (Common Objects in Context)
+    dataset.\n\nMy motivation for creating this application stems from a previous
+    job where we considered integrating real-time object detection from a HoloLens
+    2 camera stream. Unfortunately, short deadlines prevented that feature from becoming
+    a reality. However, my fascination with the concept led me to develop this project
+    on my own."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: edca85d80a665e34c839a21de14e941e, type: 2}
   m_sharedMaterial: {fileID: -5196459610232878032, guid: edca85d80a665e34c839a21de14e941e,
