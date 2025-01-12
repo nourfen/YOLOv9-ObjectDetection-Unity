@@ -4,12 +4,15 @@ using System.Collections.Generic;
 
 public class Detector : MonoBehaviour
 {
+    #region Variables
+    // Constants:
     private const int TARGET_WIDTH = 640;
     private const int TARGET_HEIGHT = 640;
-
+        
+    // Public:
     public FileLoader fileLoader; 
-
-    // Object Detection
+    
+    // Private
     private ModelAsset _modelAsset;
     private Drawable _screen;
     private Model _runtimeModel;
@@ -17,17 +20,20 @@ public class Detector : MonoBehaviour
     private Yolo _yolo;
     private Source _source;
     
-    //
-    private bool _resolutionWasSet = false;
-
+    private bool _resolutionWasSet;
+    #endregion
+    
+    #region Unity Methods
     void Start()
     {
         // Initialise Classes
         _yolo = new Yolo();
+        //TODO: Link to the Dropdown (Model Selection).
         _modelAsset = Resources.Load<ModelAsset>("Models/yolov9-c");
         _runtimeModel = ModelLoader.Load(_modelAsset);
         _worker = new Worker(_runtimeModel, BackendType.GPUCompute);
-
+        
+        // Event subscription
         fileLoader.OnSourceDetected += OnSourceChanged;
     }
 
@@ -47,6 +53,8 @@ public class Detector : MonoBehaviour
     {
         _worker.Dispose();
     }
+    
+    #endregion
 
     public void Dispose()
     {

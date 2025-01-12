@@ -32,6 +32,5 @@ public class CameraSource : Source
     public override void Dispose()
     {
         webcamTexture.Stop();
-        webcamTexture = null;
     }
 }

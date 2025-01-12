@@ -109,6 +109,5 @@ public class FileLoader : MonoBehaviour
     {
         fileStatus.text = "";
         _path = "";
-        //_sourceType = SourceType.ImageSource;
     }
 }
